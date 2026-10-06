@@ -26,8 +26,14 @@ const ClientesProvider = ({ children }) => {
     setClientes((clientesActuales) => [...clientesActuales, clienteNuevo])
   }
 
+  const quitarCliente = (id) => {
+    setClientes((clientesActuales) =>
+      clientesActuales.filter((cliente) => cliente.id !== id)
+    )
+  }
+
   return (
-    <ClientesContext.Provider value={{ clientes, loading, error, agregarCliente }}>
+    <ClientesContext.Provider value={{ clientes, loading, error, agregarCliente, quitarCliente }}>
       {children}
     </ClientesContext.Provider>
   )

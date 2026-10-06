@@ -1,41 +1,44 @@
 import '../css/detallecliente.css'
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
- 
+import clientesService from "../services/clientesService";
+import useClientes from "../hooks/useClientes";
+
 const DetalleCliente = () => {
  const { id } = useParams();
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
+  const { quitarCliente } = useClientes();
 
   const [cliente, setCliente] = useState(null);
   const [mensaje, setMensaje] = useState("");
+  const [noEncontrado, setNoEncontrado] = useState(false);
 
   useEffect(() => {
-    fetch(`https://fakestoreapi.com/users/${id}`)
-      .then((res) => res.json())
-      .then((data) => setCliente(data));
+    clientesService
+      .obtenerCliente(id)
+      .then((data) => setCliente(data))
+      .catch(() => setNoEncontrado(true));
   }, [id]);
 
   const eliminarCliente = async () => {
     try {
-      const respuesta = await fetch(
-        `https://fakestoreapi.com/users/${id}`,
-        {
-          method: "DELETE",
-        }
-      );
+      await clientesService.eliminarCliente(id);
 
-      if (respuesta.ok) {
-        setMensaje("Cliente eliminado correctamente");
+      quitarCliente(id);
+      setMensaje("Cliente eliminado correctamente");
 
-        setTimeout(() => {
-          navigate("/clientes");
-        }, 2000);
-      }
-    } catch (error) {
+      setTimeout(() => {
+        navigate("/clientes");
+      }, 2000);
+    } catch {
       setMensaje("Error al eliminar cliente");
     }
   };
+  if (noEncontrado) {
+    return <h2>Cliente no encontrado.</h2>;
+  }
+
   if (!cliente) {
     return <h2>Cargando cliente...</h2>;
   }
