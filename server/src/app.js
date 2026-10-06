@@ -1,5 +1,6 @@
 import express from 'express'
 import cors from 'cors'
+import mongoose from 'mongoose'
 
 const app = express()
 
@@ -13,6 +14,14 @@ app.use(express.json())
 // Servidor base: confirma que la API responde
 app.get('/', (_req, res) => {
   res.json({ mensaje: 'API del Panel de Control de Clientes funcionando' })
+})
+
+// Estado del servidor y de la conexión con la base de datos
+app.get('/api/health', (_req, res) => {
+  res.json({
+    servidor: 'ok',
+    baseDeDatos: mongoose.connection.readyState === 1 ? 'conectada' : 'desconectada'
+  })
 })
 
 // Ruta inexistente
