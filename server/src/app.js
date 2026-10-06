@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import clientesRoutes from './routes/clientes.routes.js'
 
 const app = express()
 
@@ -24,6 +25,8 @@ app.get('/api/health', (_req, res) => {
   })
 })
 
+app.use('/api/clientes', clientesRoutes)
+
 // Ruta inexistente
 app.use((_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' })
@@ -31,6 +34,11 @@ app.use((_req, res) => {
 
 // Manejo centralizado de errores
 app.use((error, _req, res, _next) => {
+  if (error.name === 'ValidationError') {
+    const detalles = Object.values(error.errors).map((e) => e.message)
+    return res.status(400).json({ error: 'Datos inválidos', detalles })
+  }
+
   console.error(error)
   res.status(500).json({ error: 'Error interno del servidor' })
 })
