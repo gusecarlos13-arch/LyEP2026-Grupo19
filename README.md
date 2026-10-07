@@ -53,6 +53,31 @@ npm test
 
 Las pruebas simulan la base de datos, por lo que no necesitan conexión a Atlas.
 
+## Despliegue
+
+La aplicación está publicada en internet:
+
+| Parte | Servicio | URL |
+| --- | --- | --- |
+| Frontend | Vercel | https://lyep2026-grupo19.vercel.app |
+| Backend (API) | Render | https://lyep2026-grupo19-api.onrender.com |
+| Base de datos | MongoDB Atlas | Cluster M0 (gratuito) |
+
+Para probarla: ingresar con `jimena@gmail.com` / `Admin123` / sector **Gerencia**.
+
+> El backend usa el plan gratuito de Render: se suspende tras 15 minutos sin uso y la primera petición puede demorar alrededor de un minuto.
+
+### Configuración
+
+**Backend en Render** (Web Service): Root Directory `server`, Build Command `npm install`, Start Command `npm start`, y las variables de entorno:
+
+- `MONGODB_URI`: cadena de conexión de MongoDB Atlas.
+- `CLIENT_URL`: `http://localhost:5173,https://lyep2026-grupo19.vercel.app` (orígenes permitidos por CORS).
+
+**Frontend en Vercel**: Root Directory `client`, preset Vite, y la variable de entorno `VITE_API_URL=https://lyep2026-grupo19-api.onrender.com`. El archivo `client/vercel.json` redirige todas las rutas a `index.html` para que React Router funcione al recargar la página.
+
+Cada merge a `main` vuelve a desplegar automáticamente las dos partes.
+
 ## API REST
 
 | Método | Ruta | Descripción |
@@ -82,7 +107,7 @@ Ejemplo de cliente:
 
 | Integrante | Rama | Aporte |
 | --- | --- | --- |
-| Carlos, Gustavo Emanuel | `feature/carlos-gustavo` | Estructura del repositorio, servidor Express, conexión a MongoDB Atlas, modelo y datos de prueba |
+| Carlos, Gustavo Emanuel | `feature/carlos-gustavo`, `feature/carlos-gustavo-deploy` | Estructura del repositorio, servidor Express, conexión a MongoDB Atlas, modelo, datos de prueba y despliegue |
 | Mendivil, Lautaro Facundo | `feature/mendivil-lautaro` | API REST, integración con el frontend, pruebas y documentación |
 
 - Cada integrante trabaja en su rama `feature/`; nadie hace push directo a `main` (está protegida por una regla del repositorio).
